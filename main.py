@@ -7,7 +7,6 @@ import random
 import asyncio
 from datetime import datetime, timedelta
 import time
-from deep_translator import GoogleTranslator
 from db_service import db
 from interaction_views import DuelView, GardenView, TeamView, TownView, ShopView, session_manager, PlayerShopInventorySelect
 
@@ -3674,17 +3673,6 @@ async def help_command(ctx, category: str = None):
                 "`P!claim food` - Claim food from food events"
             ),
             inline=False
-        )
-        embed.add_field(
-            name="🎮 Other",
-            value=(
-                "`P!translate <message_id> <language>` - Translate any message\n"
-                "`P!feed <item>` - Feed Pax during specific hours\n"
-                "`P!riddle` - Get a random riddle (answer in DM)\n"
-                "`P!whisper` & `P!listen` - Secret quest commands"
-            ),
-            inline=False
-        )
         
     elif category == "duel":
         embed = discord.Embed(
@@ -3891,28 +3879,7 @@ async def help_command(ctx, category: str = None):
                 "`P!compliment [@user]` - Give a wholesome compliment"
             ),
             inline=False
-        )
-        embed.add_field(
-            name="⏰ Utilities",
-            value=(
-                "`P!remind <time>` - Set a reminder (e.g., `P!remind 30m`)\n"
-                "`P!hydrate` - Sarcastic water drinking reminder\n"
-                "`P!translate <text> <language>` - Translate text to any language"
-            ),
-            inline=False
-        )
-        embed.add_field(
-            name="📝 Examples",
-            value=(
-                "`P!coinflip` - Flip a coin\n"
-                "`P!8ball Will I win my next duel?` - Ask a question\n"
-                "`P!remind 2h30m` - Set a 2.5 hour reminder\n"
-                "`P!translate Hello how are you spanish` - Translate to Spanish"
-            ),
-            inline=False
-        )
-        embed.set_footer(text="Have fun! 🎉")
-        
+
     elif category == "admin":
         embed = discord.Embed(
             title="👑 Admin Commands",
@@ -8845,145 +8812,6 @@ async def listen_command(ctx):
     """Alternative hidden command for Echoes of the Lost Grove"""
     await whisper_command(ctx)
 
-@bot.command(name="translate")
-async def translate_command(ctx, *args):
-    """Translate text or a message to another language
-    Usage: 
-    - P!translate <text> <language> - Translate direct text
-    - P!translate <message_id> <language> - Translate a message by ID
-    
-    Examples:
-    - P!translate Hello world spanish
-    - P!translate 123456789 french
-    - P!translate How are you today? japanese
-    """
-    if len(args) < 2:
-        embed = discord.Embed(
-            title="🌐 Translation Command",
-            description="Translate text or messages to any language!",
-            color=discord.Color.blue()
-        )
-        embed.add_field(
-            name="📝 Translate Text",
-            value="`P!translate <text> <language>`\n**Example:** `P!translate Hello world spanish`",
-            inline=False
-        )
-        embed.add_field(
-            name="💬 Translate Message",
-            value="`P!translate <message_id> <language>`\n**Example:** `P!translate 123456789 french`",
-            inline=False
-        )
-        embed.add_field(
-            name="🗣️ Supported Languages",
-            value="english, spanish, french, german, italian, japanese, korean, chinese (simplified/traditional), portuguese, russian, arabic, hindi, dutch, and 100+ more!\n\nUse language names or codes (e.g., 'es', 'ja', 'zh-cn')",
-            inline=False
-        )
-        embed.set_footer(text="Tip: Right-click a message → Copy ID to get the message ID")
-        await ctx.send(embed=embed)
-        return
-    
-    try:
-        # Parse arguments: last arg is language, everything else is text or message ID
-        language = args[-1]
-        content_args = args[:-1]
-        
-        # Determine if first arg is a message ID (numeric)
-        is_message_id = False
-        text_to_translate = None
-        original_author = None
-        
-        if len(content_args) == 1 and content_args[0].isdigit():
-            # Message ID format: P!translate <message_id> <language>
-            is_message_id = True
-            try:
-                msg_id = int(content_args[0])
-                message = await ctx.channel.fetch_message(msg_id)
-                if not message.content:
-                    await ctx.send("❌ This message has no text content to translate!")
-                    return
-                text_to_translate = message.content
-                original_author = message.author.display_name
-            except discord.NotFound:
-                await ctx.send("❌ Message not found in this channel!")
-                return
-            except discord.Forbidden:
-                await ctx.send("❌ I don't have permission to access that message!")
-                return
-        else:
-            # Direct text format: P!translate <text...> <language>
-            text_to_translate = " ".join(content_args)
-            original_author = ctx.author.display_name
-        
-        # Initialize translator with retry logic
-        translator = Translator()
-        
-        # Normalize language input
-        lang_code = language.lower()
-        
-        # Check if language is a language name or code
-        if lang_code not in LANGUAGES.values() and lang_code not in LANGUAGES.keys():
-            # Try to find language by name (case-insensitive)
-            found = False
-            for code, name in LANGUAGES.items():
-                if name.lower() == lang_code:
-                    lang_code = code
-                    found = True
-                    break
-            
-            if not found:
-                # Try partial match
-                for code, name in LANGUAGES.items():
-                    if lang_code in name.lower():
-                        lang_code = code
-                        found = True
-                        break
-            
-            if not found:
-                await ctx.send(f"❌ Language '{language}' not recognized!\n\nUse a language name (e.g., 'spanish', 'japanese') or code (e.g., 'es', 'ja')\n\nPopular languages: english, spanish, french, german, italian, japanese, korean, chinese, portuguese, russian")
-                return
-        
-        # If it's a language name, get the code
-        if lang_code in LANGUAGES.values():
-            for code, name in LANGUAGES.items():
-                if name == lang_code:
-                    lang_code = code
-                    break
-        
-        # Perform translation with retry for better accuracy
-        max_retries = 2
-        translation = None
-        for attempt in range(max_retries):
-            try:
-                translation = translator.translate(text_to_translate, dest=lang_code)
-                break
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    raise e
-                await asyncio.sleep(0.5)
-        
-        # Detect source language
-        source_lang = LANGUAGES.get(translation.src, translation.src).title()
-        target_lang = LANGUAGES.get(lang_code, lang_code).title()
-        
-        # Build plain text response (no embed)
-        if is_message_id and original_author:
-            # Show who's message it is
-            response = f"🌐 **{source_lang} → {target_lang}**\n{translation.text}"
-        else:
-            # For direct text translation, just show the translation
-            response = f"🌐 **{target_lang}:** {translation.text}"
-        
-        await ctx.send(response)
-        
-    except Exception as e:
-        error_msg = str(e)
-        if "HTTPSConnectionPool" in error_msg or "Connection" in error_msg:
-            await ctx.send("❌ Translation service temporarily unavailable. Please try again in a moment!")
-        elif "invalid destination language" in error_msg.lower():
-            lang_mention = target_lang if 'target_lang' in locals() else "the specified language"
-            await ctx.send(f"❌ '{lang_mention}' is not a valid language code!\n\nTry: english, spanish, french, german, italian, japanese, korean, chinese, portuguese, russian")
-        else:
-            await ctx.send(f"❌ Translation failed: {error_msg}\n\nTry again or use a different language!")
 
 @bot.command()
 async def weapons(ctx):
