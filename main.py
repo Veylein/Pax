@@ -7,7 +7,7 @@ import random
 import asyncio
 from datetime import datetime, timedelta
 import time
-from googletrans import Translator, LANGUAGES
+from deep_translator import GoogleTranslator
 from db_service import db
 from interaction_views import DuelView, GardenView, TeamView, TownView, ShopView, session_manager, PlayerShopInventorySelect
 
