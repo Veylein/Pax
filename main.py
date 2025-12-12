@@ -7155,7 +7155,7 @@ async def rebirth_shop(ctx):
 async def rbuy(ctx, *, item_name: str = ""):
     """Purchase items from the Rebirth Shop using rebirths"""
     if not item_name:
-        await ctx.send("❌ Usage: `P!rbuy <item_name or ID>`\nExample: `P!rbuy Nitro` or `P!rbuy R1`")
+        await ctx.send("❌ Usage: `P!rbuy <item_name or ID>`\nExample: `P!rbuy Level` or `P!rbuy R1`")
         return
     
     user_id = str(ctx.author.id)
