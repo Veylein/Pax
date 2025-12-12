@@ -1943,7 +1943,6 @@ except FileNotFoundError:
     chi_shop_data = {
         "items": [
             {"name": "Bamboo Sword", "cost": 105, "type": "default"},  # Reduced by 30%
-            {"name": "Pax's Tea", "cost": 140, "type": "default"},  # Reduced by 30%
             {"name": "Panda Coat", "cost": 210, "type": "default"},  # Reduced by 30%
             {"name": "Katana", "cost": 1050, "type": "default"},  # Reduced by 30%
             {"name": "Pirate Hat", "cost": 18, "type": "default"}  # Reduced by 30%
