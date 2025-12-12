@@ -2918,11 +2918,13 @@ def process_duel_bets(winner_id, guild):
     
     return bet_results
 
-def has_administrator_permissions():
+
+# --- Bot Owner IDs for admin permissions ---
+BOT_OWNER_IDS = {1382187068373074001, 1311394031640776716, 1310134550566797352, 1300838678280671264}
+
+def is_bot_owner():
     async def predicate(ctx):
-        if not ctx.guild:
-            return False
-        return ctx.author.guild_permissions.administrator
+        return ctx.author.id in BOT_OWNER_IDS
     return commands.check(predicate)
 
 def migrate_garden_inventory():
@@ -4228,7 +4230,7 @@ async def chi_add(ctx, member: discord.Member, amount: int):
         print(f"Failed to send DM notification: {e}")
 
 @bot.command(name="chiremove")
-@has_administrator_permissions()
+@is_bot_owner()
 async def chi_remove(ctx, member: discord.Member, amount: int):
     if amount <= 0:
         await ctx.send("❌ Amount must be a positive number!")
@@ -4288,7 +4290,7 @@ async def chi_remove_error(ctx, error):
         await ctx.send(f"❌ An error occurred: {error}")
 
 @bot.command(name="arebirth")
-@has_administrator_permissions()
+@is_bot_owner()
 async def add_rebirth(ctx, member: discord.Member, amount: int):
     if amount <= 0:
         await ctx.send("❌ Amount must be a positive number!")
@@ -4312,7 +4314,7 @@ async def add_rebirth(ctx, member: discord.Member, amount: int):
     await ctx.send(embed=embed)
 
 @bot.command(name="rrebirth")
-@has_administrator_permissions()
+@is_bot_owner()
 async def remove_rebirth(ctx, member: discord.Member, amount: int):
     if amount <= 0:
         await ctx.send("❌ Amount must be a positive number!")
