@@ -1520,7 +1520,7 @@ intents.guilds = True
 intents.members = True
 intents.reactions = True
 
-bot = commands.Bot(command_prefix=["P!", "Q!"], intents=intents, help_command=None)
+bot = commands.Bot(command_prefix=["P!"], intents=intents, help_command=None)
 
 async def log_event(event_type: str, description: str, guild, color: discord.Color = discord.Color.blue()):
     """Log important bot events to the designated log channel
@@ -5813,6 +5813,7 @@ async def find_artifact(ctx, *, args: str = ""):
     save_artifact_state()
 
 @bot.command(name="event")
+@is_bot_owner()
 async def event_command(ctx, event_type: str = ""):
     """Admin command to spawn events manually"""
     global chi_party_last_spawn, artifact_state
@@ -6352,6 +6353,7 @@ async def rift_run(ctx):
     await ctx.send(f"🏃 **{ctx.author.display_name}** fled from the rift! You will not receive rewards.")
 
 @bot.command(name="message")
+@is_bot_owner()
 async def message_stats(ctx, mode: str = ""):
     """Admin command to show message statistics in the server"""
     
@@ -6463,6 +6465,7 @@ async def message_stats(ctx, mode: str = ""):
         await loading_msg.edit(content=f"❌ Error scanning messages: {str(e)}")
 
 @bot.command(name="log")
+@is_bot_owner()
 async def log_command(ctx, mode: str = None, target: str = None):
     """Enhanced admin command: P!log [page/command/channel] [value]"""
     
@@ -6788,6 +6791,7 @@ async def debug_events(ctx):
     await ctx.send("🔧 Debug: All chi events and chi parties have been cleared!")
 
 @bot.command()
+@is_bot_owner()
 async def stop(ctx):
     global pax_active
     
@@ -6808,6 +6812,7 @@ async def stop(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
+@is_bot_owner()
 async def start(ctx):
     global pax_active
     
@@ -6828,6 +6833,7 @@ async def start(ctx):
     await ctx.send(embed=embed)
 
 @bot.command(name="blacklist")
+@is_bot_owner()
 async def blacklist_cmd(ctx, action: str = "", user_id: str = ""):
     global blacklisted_users
     
@@ -6877,6 +6883,7 @@ async def blacklist_cmd(ctx, action: str = "", user_id: str = ""):
         await ctx.send(embed=embed)
 
 @bot.command(name="reset")
+@is_bot_owner()
 async def reset_all_chi(ctx):
     """Reset EVERYTHING for all users - chi, rebirths, gardens, inventory, everything! (admin only)"""
     if not ctx.guild or not ctx.author.guild_permissions.administrator:
@@ -9826,6 +9833,7 @@ async def duel(ctx, action_or_user: str = "", *, item_name: str = ""):
         return
 
 @bot.command(aliases=["tourn"])
+@is_bot_owner()
 async def tournament(ctx, user1: discord.Member = None, user2: discord.Member = None):
     """Admin-only: Force two users to duel in a tournament"""
     if not ctx.guild or not ctx.author.guild_permissions.administrator:
