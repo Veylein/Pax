@@ -10,6 +10,7 @@ import time
 from deep_translator import GoogleTranslator
 from db_service import db
 from interaction_views import DuelView, GardenView, TeamView, TownView, ShopView, session_manager, PlayerShopInventorySelect
+from discord import app_commands
 
 DATA_FILE = "chi_data.json"
 QUEST_DATA_FILE = "quests_data.json"
@@ -1522,6 +1523,11 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix=["P!"], intents=intents, help_command=None)
 
+# Slash command /help (does not interfere with prefix help)
+@bot.tree.command(name="help", description="Show help for the bot")
+async def help_slash(interaction: discord.Interaction):
+    await interaction.response.send_message("This is the slash command help! Use !help for the prefix version.")
+
 async def log_event(event_type: str, description: str, guild, color: discord.Color = discord.Color.blue()):
     """Log important bot events to the designated log channel
     
@@ -1943,7 +1949,7 @@ except FileNotFoundError:
     chi_shop_data = {
         "items": [
             {"name": "Bamboo Sword", "cost": 105, "type": "default"},  # Reduced by 30%
-            {"name": "Panda Coat", "cost": 210, "type": "default"},  # Reduced by 30%
+            {"name": "Pax's Tea", "cost": 140, "type": "default"},  # Reduced by 30%
             {"name": "Katana", "cost": 1050, "type": "default"},  # Reduced by 30%
             {"name": "Pirate Hat", "cost": 18, "type": "default"}  # Reduced by 30%
         ]
