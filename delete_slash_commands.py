@@ -1,7 +1,7 @@
 import discord
 import asyncio
 
-DISCORD_TOKEN = "YOUR_TOKEN_HERE"
+DISCORD_TOKEN = "MTQyNjA3MDgyMjY4MjEwMzg1OQ.GfqtTo.Ba2gwzChhH-G3pMvtBLmVHbhAQML1F2uhCOfXg"
 
 class CleanupBot(discord.Client):
     async def on_ready(self):
