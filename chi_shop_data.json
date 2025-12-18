@@ -239,14 +239,6 @@
         },
         {
             "item_id": "C18",
-            "name": "Pax's Tea",
-            "cost": 200,
-            "type": "default",
-            "tags": ["decoration"],
-            "realm": "Pandian Realm"
-        },
-        {
-            "item_id": "C19",
             "name": "Pirate Hat",
             "cost": 25,
             "type": "default",
@@ -254,7 +246,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C20",
+            "item_id": "C19",
             "name": "Couch",
             "cost": 25,
             "type": "default",
@@ -262,7 +254,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C21",
+            "item_id": "C20",
             "name": "TV",
             "cost": 100,
             "type": "default",
@@ -270,7 +262,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C22",
+            "item_id": "C21",
             "name": "Bed",
             "cost": 150,
             "type": "default",
@@ -278,7 +270,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C23",
+            "item_id": "C22",
             "name": "Treadmill",
             "cost": 50,
             "type": "default",
@@ -286,7 +278,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C24",
+            "item_id": "C23",
             "name": "Weight Bench",
             "cost": 75,
             "type": "default",
@@ -294,7 +286,7 @@
             "realm": "Pandian Realm"
         },
         {
-            "item_id": "C25",
+            "item_id": "C24",
             "name": "Punching Bag",
             "cost": 100,
             "type": "default",
@@ -309,16 +301,6 @@
             "tags": ["tool", "garden"],
             "tool_key": "basic_hoe",
             "description": "A simple farming tool (+10% harvest chi)",
-            "realm": "Pandian Realm"
-        },
-        {
-            "item_id": "T2",
-            "name": "Steel Rake",
-            "cost": 8000,
-            "type": "garden_tool",
-            "tags": ["tool", "garden"],
-            "tool_key": "steel_rake",
-            "description": "Sturdy steel rake (+10% harvest, +5% speed)",
             "realm": "Pandian Realm"
         }
     ]
